@@ -1,3 +1,6 @@
+//Versão 1.0.2
+//ChatbotEximia
+//Lucas felipe
 const qrcode = require('qrcode-terminal');
 const { Client, Buttons, List, MessageMedia } = require('whatsapp-web.js');
 const client = new Client();
@@ -199,7 +202,7 @@ if (msg.body === '2' && msg.from.endsWith('@c.us')) {
             if (!routingMap.has(chatId) && !pendingSupportRequests.includes(chatId)) {
                 pendingSupportRequests.push(chatId);
                 await notifySupportAgents(`📥 Novo cliente aguardando suporte.\n\n📝 Informações fornecidas:\n${formattedInfo}`);
-                console.log(`📥 ${nome} entrou na fila de suporte.`);
+                console.log(`📥 ${chatId} entrou na fila de suporte.`);
             }
             return;
         }
@@ -279,6 +282,7 @@ if (msg.body === '2' && msg.from.endsWith('@c.us')) {
                 await client.sendMessage(destinatario, "O atendimento foi encerrado por um dos participantes.");
     
                 console.log('✅ Atendimento encerrado com sucesso.');
+                return;
             }
         } else {
             console.log(`⚠️ Erro: Nenhum destinatário encontrado para ${chatId}`);
