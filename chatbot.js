@@ -1,4 +1,4 @@
-//Versão 1.0.2
+//Versão 1.0.4
 //ChatbotEximia
 //Lucas felipe
 const qrcode = require('qrcode-terminal');
