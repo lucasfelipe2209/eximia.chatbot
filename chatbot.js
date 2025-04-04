@@ -264,7 +264,7 @@ if (msg.body === '2' && msg.from.endsWith('@c.us')) {
             // **Filtrar comandos bloqueados antes de encaminhar**
             if (blockedCommands.some(cmd => msg.body.toLowerCase().startsWith(cmd))) {
                 console.log(`🚫 Comando bloqueado detectado: ${msg.body}`);
-        
+                return;
             }
     
                
