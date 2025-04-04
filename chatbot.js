@@ -1,4 +1,4 @@
-//Versão 1.0.5
+//Versão 1.0.6
 //ChatbotEximia
 //Lucas felipe
 const qrcode = require('qrcode-terminal');
@@ -266,10 +266,10 @@ if (msg.body === '2' && msg.from.endsWith('@c.us')) {
     
         if (destinatario) {
             // **Filtrar comandos bloqueados antes de encaminhar**
-            if (blockedCommands.some(cmd => msg.body.toLowerCase().startsWith(cmd))) {
-                console.log(`🚫 Comando bloqueado detectado: ${msg.body}`);
-                return;
-            }
+          //  if (blockedCommands.some(cmd => msg.body.toLowerCase().startsWith(cmd))) {
+            //    console.log(`🚫 Comando bloqueado detectado: ${msg.body}`);
+              //  return;
+            //}
     
                
             // **Finalizar atendimento se receber "sair" ou "encerrar"**
@@ -287,7 +287,14 @@ if (msg.body === '2' && msg.from.endsWith('@c.us')) {
     
                 console.log('✅ Atendimento encerrado com sucesso.');
                 return;
-            }
+            }       
+    
+    
+        // **Filtrar comandos bloqueados antes de encaminhar**
+        if (blockedCommands.some(cmd => msg.body.toLowerCase().startsWith(cmd))) {
+            console.log(`🚫 Comando bloqueado detectado: ${msg.body}`);
+            return;
+        }
         } else {
             console.log(`⚠️ Erro: Nenhum destinatário encontrado para ${chatId}`);
         }
