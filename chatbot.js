@@ -1,9 +1,13 @@
-//Versão 1.0.4
+//Versão 1.0.5
 //ChatbotEximia
 //Lucas felipe
 const qrcode = require('qrcode-terminal');
 const { Client, Buttons, List, MessageMedia } = require('whatsapp-web.js');
-const client = new Client();
+const client = new Client({
+    puppeteer: {
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
+});
 const activeSessions = new Map();
 const activeChats = new Map();
 const sessionTimeouts = new Map();
