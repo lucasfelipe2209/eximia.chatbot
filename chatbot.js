@@ -164,10 +164,19 @@ client.on('message', async msg => {
             return;
         }
 
-        // ... [verificação dos padrões e push na fila]
+          // Salvar informações do cliente
+    activeChats.set(chatId, userInfo);
 
-        return;
+    // Adicionar cliente à fila
+    if (!pendingSupportRequests.includes(chatId)) {
+        pendingSupportRequests.push(chatId);
+        console.log(`🆕 Cliente ${chatId} adicionado à fila.`);
     }
+
+    incompleteResponses.delete(chatId);
+    await client.sendMessage(chatId, '✅ Suas informações foram recebidas! Aguarde um momento enquanto conectamos você a um atendente.');
+    return;
+}
 
     if (routingMap.has(chatId) || [...routingMap.values()].includes(chatId)) {
         let destinatario = routingMap.get(chatId);
