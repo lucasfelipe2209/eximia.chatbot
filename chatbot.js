@@ -63,6 +63,69 @@ client.on('message', async msg => {
         await client.sendMessage(chatId, 'Nosso atendimento funciona de segunda a sexta, das 07:30 às 18:00. Por favor, entre em contato dentro desse horário.');
         return;
     }
+    if (incompleteResponses.has(chatId)) {
+        const userInfo = msg.body.trim();
+
+        if (userInfo === '0') {
+            await client.sendMessage(chatId, 
+                '⚠️ Para suporte sem número de contrato, envie um e-mail para:\n\n📧 suporte@eximia.com.br\n\n' +
+                'Inclua seus dados e a descrição do problema para que possamos ajudá-lo.\n\n' +
+                'Caso queira iniciar um novo atendimento, basta enviar uma nova mensagem.');
+
+            routingMap.delete(chatId);
+            idcActiveSessions.delete(chatId);
+            greetedUsers.delete(chatId);
+            activeSupportSessions.delete(chatId);
+            incompleteResponses.delete(chatId);
+
+            await client.sendMessage(chatId, '🔄 Atendimento encerrado. Envie uma nova mensagem para recomeçar.');
+            return;
+        }
+        
+    const nomePattern = /^[A-Za-zÀ-ÿ\s]+$/m; 
+    const empresaPattern = /^.{3,}$/m; 
+    const etiquetaPattern = /\b\d{5,6}\b/m;
+    const teamviewerPattern = /\b\d{9,10}\b/m;
+
+    const nomeMatch = userInfo.match(nomePattern);
+    const empresaMatch = userInfo.match(empresaPattern);
+    const etiquetaMatch = userInfo.match(etiquetaPattern);
+    const teamviewerMatch = userInfo.match(teamviewerPattern);
+
+    if (nomeMatch && empresaMatch && etiquetaMatch && teamviewerMatch) {
+        const nome = nomeMatch[0];
+        const empresa = empresaMatch[0];
+        const etiqueta = etiquetaMatch[0];
+        const teamviewer = teamviewerMatch[0];
+
+        const formattedInfo = `${nome}\n${empresa}\n${etiqueta}\n${teamviewer}`;
+        activeChats.set(chatId, formattedInfo);
+
+        await client.sendMessage(chatId, '✅ Obrigado! Estamos conectando você ao próximo atendente disponível.');
+        incompleteResponses.delete(chatId);
+
+        if (!routingMap.has(chatId) && !pendingSupportRequests.includes(chatId)) {
+            pendingSupportRequests.push(chatId);
+            await notifySupportAgents(`📥 Novo cliente aguardando suporte.\n\n📝 Informações fornecidas:\n${formattedInfo}`);
+            console.log(`📥 ${chatId} entrou na fila de suporte.`);
+            
+        }
+        return;
+    }
+    
+
+    // Se estiver incompleto
+    await client.sendMessage(chatId, '⚠️ Por favor, envie todas as informações corretamente em uma única mensagem:\n\n' +
+        '*Nome:\n' +
+        '*Nome da Empresa:\n' +
+        '*Etiqueta Eximia:\n' +
+        '*Número do TeamViewer:\n\n' +
+        'Caso não tenha um número de contrato, digite *0*.\n\n' +
+        'Exemplo de preenchimento correto:\n```João da Silva\nMinha Empresa Ltda\n54321\n123456789```');
+
+    console.log(`❌ Entrada inválida de ${chatId}: "${userInfo}"`);
+    return;
+    }
 
     if (supportAgents.includes(chatId) && msg.body.toLowerCase() === 'fila') {
         // [3] Log de acesso à fila
@@ -149,20 +212,20 @@ client.on('message', async msg => {
         return;
     }
 
-    if (incompleteResponses.has(chatId)) {
-        const userInfo = msg.body.trim();
+    //if (incompleteResponses.has(chatId)) {
+    //    const userInfo = msg.body.trim();
         
 
-        if (userInfo === '0') {
-            await client.sendMessage(chatId, '⚠️ Para suporte sem número de contrato, envie um e-mail para:\n\n📧 suporte@eximia.com.br');
-            routingMap.delete(chatId);
-            idcActiveSessions.delete(chatId);
-            greetedUsers.delete(chatId);
-            activeSupportSessions.delete(chatId);
-            incompleteResponses.delete(chatId);
-            await client.sendMessage(chatId, '🔄 Atendimento encerrado. Envie uma nova mensagem para recomeçar.');
-            return;
-        }
+      //  if (userInfo === '0') {
+        //    await client.sendMessage(chatId, '⚠️ Para suporte sem número de contrato, envie um e-mail para:\n\n📧 suporte@eximia.com.br');
+          //  routingMap.delete(chatId);
+       //     idcActiveSessions.delete(chatId);
+        //    greetedUsers.delete(chatId);
+         //   activeSupportSessions.delete(chatId);
+          //  incompleteResponses.delete(chatId);
+           // await client.sendMessage(chatId, '🔄 Atendimento encerrado. Envie uma nova mensagem para recomeçar.');
+          //  return;
+        //}
 
           // Salvar informações do cliente
     activeChats.set(chatId, userInfo);
@@ -173,10 +236,10 @@ client.on('message', async msg => {
         console.log(`🆕 Cliente ${chatId} adicionado à fila.`);
     }
 
-    incompleteResponses.delete(chatId);
-    await client.sendMessage(chatId, '✅ Suas informações foram recebidas! Aguarde um momento enquanto conectamos você a um atendente.');
-    return;
-}
+   // incompleteResponses.delete(chatId);
+  //  await client.sendMessage(chatId, '✅ Suas informações foram recebidas! Aguarde um momento enquanto conectamos você a um atendente.');
+   // return;
+//}
 
     if (routingMap.has(chatId) || [...routingMap.values()].includes(chatId)) {
         let destinatario = routingMap.get(chatId);
