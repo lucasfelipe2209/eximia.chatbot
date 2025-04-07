@@ -151,7 +151,7 @@ client.on('message', async msg => {
 
     if (incompleteResponses.has(chatId)) {
         const userInfo = msg.body.trim();
-        console.log(`🧾 Informações recebidas de ${chatId}: ${userInfo}`);
+        
 
         if (userInfo === '0') {
             await client.sendMessage(chatId, '⚠️ Para suporte sem número de contrato, envie um e-mail para:\n\n📧 suporte@eximia.com.br');
