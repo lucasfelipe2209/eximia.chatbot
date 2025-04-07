@@ -1,5 +1,5 @@
-//Versão 1.0.8
-//ChatbotEximia - Integração Jenkins
+//Versão 1.0.9
+//ChatbotEximia - Validação Jenkins
 //Lucas felipe
 const qrcode = require('qrcode-terminal');
 const { Client, Buttons, List, MessageMedia } = require('whatsapp-web.js');
