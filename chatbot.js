@@ -1,5 +1,5 @@
-//Versão 1.0.6
-//ChatbotEximia
+//Versão 1.0.8
+//ChatbotEximia - Integração Jenkins
 //Lucas felipe
 const qrcode = require('qrcode-terminal');
 const { Client, Buttons, List, MessageMedia } = require('whatsapp-web.js');
@@ -16,9 +16,9 @@ const pendingSupportRequests = []; // Fila de IDAs aguardando suporte
 const idcActiveSessions = new Map(); // Armazena IDCs ativos e os IDAs que estão atendendo
 const activeSupportSessions = new Set();
 const greetedUsers = new Set();
-const IDB = '5511976516433@c.us'; // Número do bot
-const IDC = '5511976518593@c.us'; // Número do IDC
-const IDD = '5511945786620@c.us'; // Número do IDD
+const IDB = '5511976516433@c.us'; // Número do bot Lucas suporte
+const IDC = '5511976518593@c.us'; // Número do IDC José Luiz
+const IDD = '5511945786620@c.us'; // Número do IDD Natália
 const supportAgents = [IDC, IDD];
 const blockedCommands = ['atender','aceitar','sair','encerrar'];
 const moment = require('moment-timezone');
