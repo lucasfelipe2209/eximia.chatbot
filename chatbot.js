@@ -292,8 +292,11 @@ if (!novoIda) {
             routingMap.delete(chatId);
             routingMap.delete(destinatario);
             idcActiveSessions.delete(chatId);
+            idcActiveSessions.delete(destinatario); 
             greetedUsers.delete(msg.from);
             activeSupportSessions.delete(chatId);
+            activeChats.delete(chatId); 
+            incompleteResponses.delete(chatId);
             await client.sendMessage(chatId, "O atendimento foi encerrado.");
             await client.sendMessage(destinatario, "O atendimento foi encerrado.");
             return;
