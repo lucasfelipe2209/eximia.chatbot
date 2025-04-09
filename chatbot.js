@@ -61,7 +61,7 @@ async function askUser(chatId, messages) {
 } 
 client.on('message', async msg => {
     const chatId = msg.from;
-
+    const textoDigitado = msg.body.trim(); 
     // [2] Log de mensagem recebida
     console.log(`📩 Mensagem recebida de ${chatId}: ${msg.body}`);
 
@@ -78,9 +78,9 @@ client.on('message', async msg => {
         return;
     }
     if (incompleteResponses.has(chatId)) {
-        const userInfo = msg.body.trim();
+        
 
-        if (userInfo === '0') {
+        if (textoDigitado === '0') {
             await client.sendMessage(chatId, 
                 '⚠️ Para suporte sem número de contrato, envie um e-mail para:\n\n📧 suporte@eximia.com.br\n\n' +
                 'Inclua seus dados e a descrição do problema para que possamos ajudá-lo.\n\n' +
@@ -101,19 +101,27 @@ client.on('message', async msg => {
     const etiquetaPattern = /\b\d{5,6}\b/m;
     const teamviewerPattern = /\b\d{9,10}\b/m;
 
-    const nomeMatch = userInfo.match(nomePattern);
-    const empresaMatch = userInfo.match(empresaPattern);
-    const etiquetaMatch = userInfo.match(etiquetaPattern);
-    const teamviewerMatch = userInfo.match(teamviewerPattern);
+    const nomeMatch = textoDigitado.match(nomePattern);
+    const empresaMatch = textoDigitado.match(empresaPattern);
+    const etiquetaMatch = textoDigitado.match(etiquetaPattern);
+    const teamviewerMatch = textoDigitado.match(teamviewerPattern);
 
     if (nomeMatch && empresaMatch && etiquetaMatch && teamviewerMatch) {
         const nome = nomeMatch[0];
         const empresa = empresaMatch[0];
         const etiqueta = etiquetaMatch[0];
         const teamviewer = teamviewerMatch[0];
-
+        const userInfo = {
+            nome,
+            empresa,
+            etiqueta,
+            teamviewer,
+            horario: now.format('YYYY-MM-DD HH:mm:ss')
+        };
         const formattedInfo = `${nome}\n${empresa}\n${etiqueta}\n${teamviewer}`;
         activeChats.set(chatId, formattedInfo);
+        
+        
 
         await client.sendMessage(chatId, '✅ Obrigado! Estamos conectando você ao próximo atendente disponível.');
         incompleteResponses.delete(chatId);
@@ -166,7 +174,7 @@ client.on('message', async msg => {
 
             const contactInfo = await client.getContactById(chatId);
             const agentName = contactInfo.pushname || contactInfo.name || 'Atendente';
-            const userInfo = activeChats.get(novoIda) || 'Informações não coletadas.';
+            userInfo = activeChats.get(novoIda) || 'Informações não coletadas.';
 
             console.log(`🔁 ${chatId} aceitou o cliente ${novoIda}`);
             await client.sendMessage(chatId, `Agora você está atendendo ${novoIda}.`);
