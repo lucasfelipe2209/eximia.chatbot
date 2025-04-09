@@ -250,7 +250,7 @@ client.on('message', async msg => {
         //}
 
           // Salvar informações do cliente
-    activeChats.set(chatId, userInfo);
+    //activeChats.set(chatId, userInfo);
 
     // Adicionar cliente à fila
     if (!pendingSupportRequests.includes(chatId)) {
