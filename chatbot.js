@@ -45,6 +45,20 @@ client.on('ready', () => {
 client.initialize();
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
+async function notifySupportAgents(message) {
+    for (const agent of supportAgents) {
+        await client.sendMessage(agent, message);
+    }
+}
+async function askUser(chatId, messages) {
+    const chat = await client.getChatById(chatId);
+    for (const message of messages) {
+            await delay(3000);
+            await chat.sendStateTyping();
+            
+            await client.sendMessage(chatId, message);
+        }
+} 
 client.on('message', async msg => {
     const chatId = msg.from;
 
