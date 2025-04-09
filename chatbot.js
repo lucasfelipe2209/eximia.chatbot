@@ -115,8 +115,7 @@ client.on('message', async msg => {
             nome,
             empresa,
             etiqueta,
-            teamviewer,
-            horario: now.format('YYYY-MM-DD HH:mm:ss')
+            teamviewer  
         };
         const formattedInfo = `${nome}\n${empresa}\n${etiqueta}\n${teamviewer}`;
         activeChats.set(chatId, formattedInfo);
@@ -167,7 +166,19 @@ client.on('message', async msg => {
                 return;
             }
 
-            const novoIda = pendingSupportRequests.shift();
+            let novoIda;
+                while (pendingSupportRequests.length > 0) {
+                const candidato = pendingSupportRequests.shift();
+                if (activeChats.has(candidato)) {
+                novoIda = candidato;
+                break;
+    }
+}
+
+if (!novoIda) {
+    await client.sendMessage(chatId, "Nenhum cliente com dados válidos para atender no momento.");
+    return;
+}
             routingMap.set(novoIda, chatId);
             idcActiveSessions.set(chatId, novoIda);
             idcActiveSessions.set(novoIda, chatId);
@@ -253,10 +264,10 @@ client.on('message', async msg => {
     //activeChats.set(chatId, userInfo);
 
     // Adicionar cliente à fila
-    if (!pendingSupportRequests.includes(chatId)) {
-        pendingSupportRequests.push(chatId);
-        console.log(`🆕 Cliente ${chatId} adicionado à fila.`);
-    }
+    //if (!pendingSupportRequests.includes(chatId)) {
+   //     pendingSupportRequests.push(chatId);
+   //     console.log(`🆕 Cliente ${chatId} adicionado à fila.`);
+    //}
 
    // incompleteResponses.delete(chatId);
   //  await client.sendMessage(chatId, '✅ Suas informações foram recebidas! Aguarde um momento enquanto conectamos você a um atendente.');
