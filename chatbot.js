@@ -96,42 +96,45 @@ client.on('message', async msg => {
             return;
         }
         
-    const nomePattern = /^[A-Za-zÀ-ÿ\s]+$/m; 
-    const empresaPattern = /^.{3,}$/m; 
-    const etiquetaPattern = /\b\d{5,6}\b/m;
-    const teamviewerPattern = /\b\d{9,10}\b/m;
-
-    const nomeMatch = textoDigitado.match(nomePattern);
-    const empresaMatch = textoDigitado.match(empresaPattern);
-    const etiquetaMatch = textoDigitado.match(etiquetaPattern);
-    const teamviewerMatch = textoDigitado.match(teamviewerPattern);
-
-    if (nomeMatch && empresaMatch && etiquetaMatch && teamviewerMatch) {
-        const nome = nomeMatch[0];
-        const empresa = empresaMatch[0];
-        const etiqueta = etiquetaMatch[0];
-        const teamviewer = teamviewerMatch[0];
-        const userInfo = {
-            nome,
-            empresa,
-            etiqueta,
-            teamviewer  
-        };
-        const formattedInfo = `${nome}\n${empresa}\n${etiqueta}\n${teamviewer}`;
-        activeChats.set(chatId, formattedInfo);
-        
-        
-
-        await client.sendMessage(chatId, '✅ Obrigado! Estamos conectando você ao próximo atendente disponível.');
-        incompleteResponses.delete(chatId);
-
-        if (!routingMap.has(chatId) && !pendingSupportRequests.includes(chatId)) {
-            pendingSupportRequests.push(chatId);
-            await notifySupportAgents(`📥 Novo cliente aguardando suporte.\n\n📝 Informações fornecidas:\n${formattedInfo}`);
-            console.log(`📥 ${chatId} entrou na fila de suporte.`);
-            
+        const partes = textoDigitado
+        .split(/[\n ]+/) // separa por espaço ou quebra de linha
+        .map(p => p.trim())
+        .filter(Boolean); // remove vazios
+    
+    // Validação esperada: nome (texto), empresa (texto), etiqueta (5-6 dígitos), teamviewer (9-10 dígitos)
+    if (partes.length >= 4) {
+        let nome = '';
+        let empresa = '';
+        let etiqueta = '';
+        let teamviewer = '';
+    
+        // tenta identificar os números pelo padrão e assumir os dois primeiros como nome/empresa
+        for (let i = 0; i < partes.length; i++) {
+            const parte = partes[i];
+            if (/^\d{5,6}$/.test(parte)) {
+                etiqueta = parte;
+            } else if (/^\d{9,10}$/.test(parte)) {
+                teamviewer = parte;
+            } else if (!nome) {
+                nome = parte;
+            } else if (!empresa) {
+                empresa = parte;
+            }
         }
-        return;
+    
+        if (nome && empresa && etiqueta && teamviewer) {
+            const formattedInfo = `${nome}\n${empresa}\n${etiqueta}\n${teamviewer}`;
+            activeChats.set(chatId, formattedInfo);
+            await client.sendMessage(chatId, '✅ Obrigado! Estamos conectando você ao próximo atendente disponível.');
+            incompleteResponses.delete(chatId);
+    
+            if (!routingMap.has(chatId) && !pendingSupportRequests.includes(chatId)) {
+                pendingSupportRequests.push(chatId);
+                await notifySupportAgents(`📥 Novo cliente aguardando suporte.\n\n📝 Informações fornecidas:\n${formattedInfo}`);
+                console.log(`📥 ${chatId} entrou na fila de suporte.`);
+            }
+            return;
+        }
     }
     
 
