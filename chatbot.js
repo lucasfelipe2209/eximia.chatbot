@@ -198,8 +198,7 @@ if (!novoIda) {
         return;
     }
 
-    if (
-        msg.body.toLowerCase().match(/^(menu|bom dia|boa tarde|boa noite|oi|olá|ola)$/i) &&
+    if (msg.body.toLowerCase().match(/^(menu|bom dia|boa tarde|boa noite|oi|olá|ola)$/i) &&
         msg.from.endsWith('@c.us') &&
         !supportAgents.includes(msg.from) &&
         !activeSupportSessions.has(msg.from)
@@ -295,6 +294,7 @@ if (!novoIda) {
             idcActiveSessions.delete(destinatario); 
             greetedUsers.delete(msg.from);
             activeSupportSessions.delete(chatId);
+            activeSupportSessions.delete(msg.from)
             activeChats.delete(chatId); 
             incompleteResponses.delete(chatId);
             await client.sendMessage(chatId, "O atendimento foi encerrado.");
