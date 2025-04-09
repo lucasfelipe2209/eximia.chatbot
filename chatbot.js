@@ -145,7 +145,7 @@ client.on('message', async msg => {
         'Caso não tenha um número de contrato, digite *0*.\n\n' +
         'Exemplo de preenchimento correto:\n```João da Silva\nMinha Empresa Ltda\n54321\n123456789```');
 
-    console.log(`❌ Entrada inválida de ${chatId}: "${userInfo}"`);
+    console.log(`❌ Entrada inválida de ${chatId}: "${textoDigitado}"`);
     return;
     }
 
