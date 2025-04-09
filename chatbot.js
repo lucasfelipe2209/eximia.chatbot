@@ -1,5 +1,5 @@
 //Versão 1.0.10
-//ChatbotEximia - Correção - tratamento de resposta
+//ChatbotEximia - Validado
 //Lucas felipe
 const qrcode = require('qrcode-terminal');
 const { Client, Buttons, List, MessageMedia } = require('whatsapp-web.js');
