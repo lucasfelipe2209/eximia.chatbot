@@ -22,15 +22,6 @@ pipeline{
         
         }
     }
-    stage('Deploy'){
-        steps{
-            sh '''
-        cd /opt/eximia.chatbot
-        docker compose down
-        docker compose up -d --build
-        '''
-        }
-    }
     
  }
 }
