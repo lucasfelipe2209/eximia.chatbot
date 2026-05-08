@@ -1,14 +1,14 @@
 pipeline{
  agent any
 
- environment{
+ environment{   
     APP_NAME = "eximia-chatbotv2"
     IMAGE_TAG = "latest"
     CONTAINER_NAME ="eximia-chatbotv2"
     PORT = "3000"
  }
 
- Stages{
+ stages{
     stage('Clone Repository'){
         steps{
             echo'obterndo codigo'
