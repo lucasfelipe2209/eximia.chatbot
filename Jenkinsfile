@@ -24,7 +24,7 @@ pipeline{
     }
     stage('Deploy'){
         steps{
-            sh '''docker-compose create'''
+            sh '''docker compose create'''
         }
     }
     
